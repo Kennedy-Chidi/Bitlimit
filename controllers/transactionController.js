@@ -708,8 +708,8 @@ const startRunningDeposit = async (data, id, next) => {
 
   await User.findByIdAndUpdate(user._id, {
     $inc: {
-      totalDeposit: req.body.amount * 1,
-      pendingDeposit: req.body.amount * -1,
+      totalDeposit: data.amount * 1,
+      pendingDeposit: data.amount * -1,
     },
   });
 
