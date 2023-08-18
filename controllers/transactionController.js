@@ -778,7 +778,7 @@ const startRunningDeposit = async (data, id, next) => {
 };
 
 exports.checkActive = catchAsync(async (req, res, next) => {
-  const activeDeposits = await Active.find();
+  // const activeDeposits = await Active.find();
 
   // activeDeposits.forEach((el, index) => {
   //   setTimeout(async () => {
