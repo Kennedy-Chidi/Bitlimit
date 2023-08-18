@@ -901,10 +901,24 @@ exports.addReferralBonus = catchAsync(async (req, res, next) => {
 
 let startEarning;
 
+function formartTime(data) {
+  const date = new Date(data);
+  return date.toLocaleString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
+}
+
 const increaseEarnings = () => {
   clearInterval(startEarning);
   startEarning = setInterval(async () => {
     const activeDeposits = await Active.find();
+    console.log(
+      `Checking total deposits of ${activeDeposits.length} at ${formartTime(
+        new Date().getTime()
+      )}`
+    );
     if (activeDeposits.length > 0) {
       activeDeposits.forEach(async (el) => {
         if (new Date().getTime() - el.serverTime >= el.planCycle) {
