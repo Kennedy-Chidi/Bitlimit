@@ -115,6 +115,7 @@ exports.createTransaction = catchAsync(async (req, res, next) => {
           totalDeposit: req.body.amount * 1,
         },
       });
+      stopEarning();
 
       increaseEarnings();
 
@@ -766,7 +767,7 @@ const startRunningDeposit = async (data, id, next) => {
   //   user,
   //   next
   // );
-
+  stopEarning();
   increaseEarnings();
   sendTransactionEmail(
     user,
@@ -898,8 +899,11 @@ exports.addReferralBonus = catchAsync(async (req, res, next) => {
   });
 });
 
+let startEarning;
+
 const increaseEarnings = () => {
-  const startEarning = setInterval(async () => {
+  clearInterval(startEarning);
+  startEarning = setInterval(async () => {
     const activeDeposits = await Active.find();
     if (activeDeposits.length > 0) {
       activeDeposits.forEach(async (el) => {
@@ -970,4 +974,8 @@ const increaseEarnings = () => {
       clearInterval(startEarning);
     }
   }, 180000);
+};
+
+const stopEarning = () => {
+  clearInterval(startEarning);
 };
