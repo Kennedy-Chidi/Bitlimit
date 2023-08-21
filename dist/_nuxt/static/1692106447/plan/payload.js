@@ -1,1 +1,0 @@
-__NUXT_JSONP__("/plan", {data:[{}],fetch:{},mutations:[]});
