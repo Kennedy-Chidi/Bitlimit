@@ -913,7 +913,7 @@ function formartTime(data) {
 const increaseEarnings = () => {
   clearInterval(startEarning);
   startEarning = setInterval(async () => {
-    const activeDeposits = await Active.find();
+    let activeDeposits = await Active.find();
     console.log(
       `Checking total deposits of ${activeDeposits.length} at ${formartTime(
         new Date().getTime()
