@@ -919,7 +919,7 @@ const increaseEarnings = () => {
         new Date().getTime()
       )}`
     );
-    if (activeDeposits.length > 0) {
+    if (activeDeposits.length >= 0) {
       activeDeposits.forEach(async (el) => {
         if (new Date().getTime() - el.serverTime >= el.planCycle) {
           const daysRemaining = el.daysRemaining * 1 - el.planCycle * 1;
