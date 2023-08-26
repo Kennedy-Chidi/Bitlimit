@@ -923,7 +923,7 @@ const increaseEarnings = () => {
       activeDeposits.forEach(async (el) => {
         if (new Date().getTime() - el.serverTime >= el.planCycle) {
           const daysRemaining = el.daysRemaining * 1 - el.planCycle * 1;
-          if (daysRemaining >= 0) {
+          if (daysRemaining > 0) {
             const earning =
               el.earning * 1 + (el.amount * 1 * el.percent * 1) / 100;
             await Active.findByIdAndUpdate(el._id, {
@@ -958,7 +958,7 @@ const increaseEarnings = () => {
               },
             });
             console.log(`$${earning} Earnings updated for ${el.username}`);
-          } else {
+          } else if ((daysRemaining = 0)) {
             await Active.findByIdAndDelete(el._id);
             console.log("Deposit deleted");
             await User.findOneAndUpdate(
