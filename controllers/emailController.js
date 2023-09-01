@@ -71,52 +71,84 @@ exports.sendEmail = catchAsync(async (req, res, next) => {
 
   const companyResult = await Company.find();
   const company = companyResult[0];
-  const domainName = company.companyDomain;
-  const companyName = company.companyName;
+  // const domainName = company.companyDomain;
+  // const companyName = company.companyName;
   const resetURL = "";
+  const banner = "";
 
-  const from = `${company.systemEmail}`;
+  // const from = `${company.systemEmail}`;
+
   const content = email.content.replace(
     "{{company-name}}",
     company.companyName
   );
-  const warning = email.warning.replace(
-    "{{company-name}}",
-    company.companyName
-  );
 
-  users.forEach((user) => {
-    try {
-      const banner = `${domainName}/uploads/${email.banner}`;
-      new SendEmail(
-        companyName,
-        domainName,
-        from,
-        user,
-        email.template,
-        email.title,
-        banner,
-        content,
-        email.headerColor,
-        email.footerColor,
-        email.mainColor,
-        email.greeting,
-        warning,
-        resetURL
-      ).sendEmail();
-    } catch (err) {
-      return next(
-        new AppError(
-          `There was an error sending the email. Try again later!, ${err}`,
-          500
-        )
-      );
-    }
-  });
+  email.template = "transaction";
+
+  // const warning = email.warning.replace(
+  //   "{{company-name}}",
+  //   company.companyName
+  // );
+
+  // console.log(content, email);
+  if (email) {
+    users.forEach((user) => {
+      try {
+        new SendEmail(
+          company,
+          user,
+          email,
+          banner,
+          content,
+          resetURL
+        ).sendEmail();
+      } catch (err) {
+        return next(
+          new AppError(
+            `There was an error sending the email. Try again later!, ${err}`,
+            500
+          )
+        );
+      }
+    });
+  } else {
+    res.status(200).json({
+      status: "success",
+    });
+  }
 
   res.status(200).json({
     status: "success",
   });
+
+  // users.forEach((user) => {
+  //   try {
+  //     const banner = `${domainName}/uploads/${email.banner}`;
+  //     new SendEmail(
+  //       companyName,
+  //       domainName,
+  //       from,
+  //       user,
+  //       email.template,
+  //       email.title,
+  //       banner,
+  //       content,
+  //       email.headerColor,
+  //       email.footerColor,
+  //       email.mainColor,
+  //       email.greeting,
+  //       warning,
+  //       resetURL
+  //     ).sendEmail();
+  //   } catch (err) {
+  //     return next(
+  //       new AppError(
+  //         `There was an error sending the email. Try again later!, ${err}`,
+  //         500
+  //       )
+  //     );
+  //   }
+  // });
 });
 
 exports.sendMessage = catchAsync(async (req, res, next) => {
