@@ -32,24 +32,24 @@ dotenv.config({ path: "./config.env" });
 
 const chokidar = require("chokidar");
 
-const watcher = chokidar.watch(
-  "/app/controllers/transactionController.js",
-  "/app/utils/email.js",
-  "/app/routes",
-  "/app/routes",
-  "/app/app.js",
-  "/app/uploads/bitcoinbtclogo_1682855641849.svg",
-  "/app/config.env",
-  {
-    ignored: /[\/\\]\./, // ignore dotfiles
-    persistent: true, // keep the process running
-  }
-);
+// const watcher = chokidar.watch(
+//   "/app/controllers/transactionController.js",
+//   "/app/utils/email.js",
+//   "/app/routes",
+//   "/app/routes",
+//   "/app/app.js",
+//   "/app/uploads/bitcoinbtclogo_1682855641849.svg",
+//   "/app/config.env",
+//   {
+//     ignored: /[\/\\]\./, // ignore dotfiles
+//     persistent: true, // keep the process running
+//   }
+// );
 
-watcher
-  .on("add", (path) => console.log(`File ${path} has been added`))
-  .on("change", (path) => console.log(`File ${path} has been changed`))
-  .on("unlink", (path) => console.log(`File ${path} has been removed`));
+// watcher
+//   .on("add", (path) => console.log(`File ${path} has been added`))
+//   .on("change", (path) => console.log(`File ${path} has been changed`))
+//   .on("unlink", (path) => console.log(`File ${path} has been removed`));
 
 const app = express();
 

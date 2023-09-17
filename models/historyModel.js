@@ -10,7 +10,10 @@ const historySchema = new mongoose.Schema({
   walletName: String,
   referredBy: String,
   walletId: String,
-  time: Number,
+  time: {
+    type: Number,
+    default: new Date().getTime(),
+  },
   reinvest: {
     type: Boolean,
     default: false,

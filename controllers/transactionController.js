@@ -25,7 +25,7 @@ exports.createTransaction = catchAsync(async (req, res, next) => {
     username: data.username,
   });
 
-  console.log(data);
+  data.walletId = data.wallet.walletId;
 
   if (data.autoTransact) {
     if (data.amount > data.wallet.balance) {
