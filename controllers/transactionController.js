@@ -56,7 +56,7 @@ exports.createTransaction = catchAsync(async (req, res, next) => {
     data.serverTime = new Date().getTime();
     const earning = Number((data.amount * data.percent) / 100).toFixed(2);
     data.earning = 0;
-    const activeDeposit = await Active.create(data);
+    // const activeDeposit = await Active.create(data);
 
     await Currency.findByIdAndUpdate(data.wallet.currencyId, {
       $inc: {
