@@ -47,7 +47,7 @@ exports.createTransaction = catchAsync(async (req, res, next) => {
     await User.findByIdAndUpdate(data.user._id, {
       $inc: { totalBalance: data.amount * -1, totalDeposit: data.amount * 1 },
     });
-    //
+
     data.status = true;
     data.reinvest = true;
     await History.create(data);
