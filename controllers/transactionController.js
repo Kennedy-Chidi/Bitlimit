@@ -20,6 +20,13 @@ exports.createTransaction = catchAsync(async (req, res, next) => {
   const data = req.body;
   const duration = data.planDuration;
 
+  data.wallet = await Wallet.findOne({
+    name: data.walletName,
+    username: data.username,
+  });
+
+  console.log(data);
+
   if (data.autoTransact) {
     if (data.amount > data.wallet.balance) {
       return next(
