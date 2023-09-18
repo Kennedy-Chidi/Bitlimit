@@ -704,6 +704,8 @@ const startRunningDeposit = async (data, id, next) => {
     });
   }
 
+  console.log(data.user);
+
   await User.findByIdAndUpdate(data.user._id, {
     $inc: { totalBalance: data.amount * -1, totalDeposit: data.amount * 1 },
   });
