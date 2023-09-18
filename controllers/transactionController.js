@@ -697,9 +697,14 @@ const startRunningDeposit = async (data, id, next) => {
 
   if (id == "") {
     await History.create(data);
+    await Wallet.findByIdAndUpdate(data.walletId, {
+      $inc: {
+        balance: data.amount * -1,
+      },
+    });
   }
 
-  await User.findOneAndUpdate(data.user._id, {
+  await User.findByIdAndUpdate(data.user._id, {
     $inc: { totalBalance: data.amount * -1, totalDeposit: data.amount * 1 },
   });
 
