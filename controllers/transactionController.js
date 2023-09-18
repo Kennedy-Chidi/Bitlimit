@@ -706,9 +706,11 @@ const startRunningDeposit = async (data, id, next) => {
 
   console.log(data.user);
 
-  await User.findByIdAndUpdate(data.user._id, {
-    $inc: { totalBalance: data.amount * -1, totalDeposit: data.amount * 1 },
-  });
+  if (data.user) {
+    await User.findByIdAndUpdate(data.user._id, {
+      $inc: { totalBalance: data.amount * -1, totalDeposit: data.amount * 1 },
+    });
+  }
 
   const earning = Number((data.amount * data.percent) / 100).toFixed(2);
   const planDuration = data.planDuration * 24 * 60 * 60 * 1000;
