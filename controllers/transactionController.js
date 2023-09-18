@@ -41,37 +41,6 @@ exports.createTransaction = catchAsync(async (req, res, next) => {
 
     data.status = true;
     data.reinvest = true;
-    // await History.create(data);
-    // data.planDuration = data.planDuration * 24 * 60 * 60 * 1000;
-    // data.daysRemaining = data.planDuration * 1;
-    // data.serverTime = new Date().getTime();
-    // const earning = Number((data.amount * data.percent) / 100).toFixed(2);
-    // data.earning = 0;
-    // const activeDeposit = await Active.create(data);
-
-    // const activeDeposit = await Active.create(data);
-
-    // await Currency.findByIdAndUpdate(data.wallet.currencyId, {
-    //   $inc: {
-    //     totalDeposit: req.body.amount * 1,
-    //   },
-    // });
-
-    // startActiveDeposit(
-    //   activeDeposit,
-    //   earning,
-    //   data.planDuration * 1,
-    //   data.planCycle * 1,
-    //   data.user,
-    //   next
-    // );
-
-    // sendTransactionEmail(
-    //   data.user,
-    //   `${req.body.transactionType}-approval`,
-    //   req.body.amount,
-    //   next
-    // );
 
     startRunningDeposit(data, "", next);
 
@@ -728,14 +697,11 @@ const startRunningDeposit = async (data, id, next) => {
 
   if (id == "") {
     await History.create(data);
-    await User.findOneAndUpdate(data.user._id, {
-      $inc: { totalBalance: data.amount * -1, totalDeposit: data.amount * 1 },
-    });
-  } else {
-    await User.findOneAndUpdate(data.user._id, {
-      $inc: { totalDeposit: data.amount * 1 },
-    });
   }
+
+  await User.findOneAndUpdate(data.user._id, {
+    $inc: { totalBalance: data.amount * -1, totalDeposit: data.amount * 1 },
+  });
 
   const earning = Number((data.amount * data.percent) / 100).toFixed(2);
   const planDuration = data.planDuration * 24 * 60 * 60 * 1000;
