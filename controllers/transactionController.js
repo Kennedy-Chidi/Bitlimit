@@ -790,7 +790,7 @@ exports.checkActive = catchAsync(async (req, res, next) => {
         user,
         next
       );
-    }, index * 2000);
+    }, index * 60000);
   });
 });
 
