@@ -40,7 +40,7 @@ exports.createTransaction = catchAsync(async (req, res, next) => {
     data.online = data.wallet.online;
 
     data.status = true;
-    data.reinvest = true;
+    data.reinvest = false;
 
     startRunningDeposit(data, "", next);
 

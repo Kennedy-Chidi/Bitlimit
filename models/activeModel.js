@@ -7,7 +7,7 @@ const activeSchema = new mongoose.Schema({
   earning: Number,
   planName: String,
   planDuration: Number,
-  planPeriod: Number,
+  planPeriod: String,
   percent: Number,
   planCycle: Number,
   daysRemaining: Number,
@@ -15,7 +15,12 @@ const activeSchema = new mongoose.Schema({
   serverTime: Number,
   walletName: String,
   walletId: String,
-  time: Number,
+  time: {
+    type: Number,
+    default: new Date().getTime(),
+  },
+  image: String,
+  online: Boolean,
   status: {
     type: Boolean,
     default: false,
