@@ -37,6 +37,7 @@ exports.createTransaction = catchAsync(async (req, res, next) => {
 
     data.walletId = data.wallet._id;
     data.image = data.wallet.image;
+    data.symbol = data.wallet.symbol;
     data.online = data.wallet.online;
 
     data.status = true;
@@ -294,6 +295,7 @@ const deleteActiveDeposit = async (id, time, next) => {
 
     await Active.findByIdAndDelete(activeResult._id);
     const user = await User.findOne({ username: activeResult.username });
+
     sendTransactionEmail(
       user,
       `investment-completion`,
@@ -363,11 +365,17 @@ const startActiveDeposit = async (
     };
 
     timeRemaining -= interval;
-    await Earning.create(form);
+    const newEarning = await Earning.create(form);
     const seconds = Math.floor((timeRemaining / 1000) % 60);
     const minutes = Math.floor((timeRemaining / (1000 * 60)) % 60);
     const hours = Math.floor((timeRemaining / (1000 * 60 * 60)) % 24);
     const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+
+    // console.log(
+    //   `The the interval is ${(interval / 60).toFixed(2)}  time remaining is ${(
+    //     timeRemaining / 60
+    //   ).toFixed(2)}`
+    // );
 
     await User.findByIdAndUpdate(user._id, {
       $inc: { totalBalance: form.earning },
@@ -384,7 +392,6 @@ const startActiveDeposit = async (
     );
 
     if (Math.floor(timeRemaining / (60 * 1000)) <= 0) {
-      console.log(`the time has elapsed completely`);
       deleteActiveDeposit(activeDeposit._id, 0, next);
       clearInterval(intervalId);
     }
@@ -706,8 +713,6 @@ const startRunningDeposit = async (data, id, next) => {
     });
   }
 
-  console.log(data.user);
-
   if (data.user) {
     await User.findByIdAndUpdate(data.user._id, {
       $inc: { totalBalance: data.amount * -1, totalDeposit: data.amount * 1 },
@@ -735,7 +740,7 @@ const startRunningDeposit = async (data, id, next) => {
     referredBy: data.referredBy,
     walletName: data.walletName,
     walletId: data.walletId,
-    planCycle: data.planCycle,
+    planCycle: planCycle,
   };
 
   const activeDeposit = await Active.create(form);
@@ -792,7 +797,7 @@ exports.checkActive = catchAsync(async (req, res, next) => {
         user,
         next
       );
-    }, index * 60000);
+    }, index * 5000);
   });
 });
 
