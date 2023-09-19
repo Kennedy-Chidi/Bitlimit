@@ -378,7 +378,7 @@ const startActiveDeposit = async (
     });
 
     console.log(
-      `The time remaining is ${days} days, ${hours} hours, ${minutes} minutes, and ${seconds} seconds`
+      `The time remaining in is ${days} days, ${hours} hours, ${minutes} minutes, and ${seconds} seconds`
     );
 
     if (Math.floor(timeRemaining / (60 * 1000)) <= 0) {
@@ -779,7 +779,7 @@ exports.checkActive = catchAsync(async (req, res, next) => {
       const earning = Number((el.amount * el.percent) / 100).toFixed(2);
 
       console.log(
-        `Active deposit is reactivated and the time remaining is ${hours} hours, ${minutes} minutes and ${seconds} seconds.`
+        `Active deposit by ${el.username} is reactivated and the time remaining is ${hours} hours, ${minutes} minutes and ${seconds} seconds.`
       );
 
       finishInterruptedActiveDeposit(
@@ -790,7 +790,7 @@ exports.checkActive = catchAsync(async (req, res, next) => {
         user,
         next
       );
-    }, index * 60000);
+    }, index * 2000);
   });
 
   // increaseEarnings();
