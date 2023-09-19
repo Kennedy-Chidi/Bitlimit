@@ -792,8 +792,6 @@ exports.checkActive = catchAsync(async (req, res, next) => {
       );
     }, index * 2000);
   });
-
-  // increaseEarnings();
 });
 
 exports.addReferralBonus = catchAsync(async (req, res, next) => {
