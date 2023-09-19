@@ -779,8 +779,10 @@ exports.checkActive = catchAsync(async (req, res, next) => {
       const earning = Number((el.amount * el.percent) / 100).toFixed(2);
 
       console.log(
-        `Active deposit by ${el.username} is reactivated and the time remaining is ${hours} hours, ${minutes} minutes and ${seconds} seconds.`
+        `Active deposit by ${el.username}, earning is ${earning} is reactivated and the time remaining is ${hours} hours, ${minutes} minutes and ${seconds} seconds.`
       );
+
+      console.log("The earning is " + earning);
 
       finishInterruptedActiveDeposit(
         el,
