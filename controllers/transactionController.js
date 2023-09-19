@@ -318,7 +318,9 @@ const startActiveDeposit = async (
   let hour = 24 * 60 * 60 * 1000;
 
   console.log(
-    `The next earning will be executed in: ${hours} hours, ${0} minutes, ${0} seconds`
+    `The next earning of the active deposit of ${
+      activeDeposit.username
+    } will be executed in: ${hours} hours, ${0} minutes, ${0} seconds`
   );
 
   // const newInterval = setInterval(async () => {
@@ -376,7 +378,7 @@ const startActiveDeposit = async (
         balance: form.earning,
       },
     });
-
+    //
     console.log(
       `The time remaining in is ${days} days, ${hours} hours, ${minutes} minutes, and ${seconds} seconds`
     );
@@ -781,8 +783,6 @@ exports.checkActive = catchAsync(async (req, res, next) => {
       console.log(
         `Active deposit by ${el.username}, earning is ${earning} is reactivated and the time remaining is ${hours} hours, ${minutes} minutes and ${seconds} seconds.`
       );
-
-      console.log("The earning is " + earning);
 
       finishInterruptedActiveDeposit(
         el,
