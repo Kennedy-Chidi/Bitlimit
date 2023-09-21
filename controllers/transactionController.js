@@ -890,8 +890,6 @@ exports.addReferralBonus = catchAsync(async (req, res, next) => {
   });
 });
 
-let startEarning;
-
 function formartTime(data) {
   const date = new Date(data);
   return date.toLocaleString("en-US", {
