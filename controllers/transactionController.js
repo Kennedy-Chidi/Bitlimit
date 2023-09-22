@@ -365,7 +365,7 @@ const startActiveDeposit = async (
     };
 
     timeRemaining -= interval;
-    const newEarning = await Earning.create(form);
+    await Earning.create(form);
     const seconds = Math.floor((timeRemaining / 1000) % 60);
     const minutes = Math.floor((timeRemaining / (1000 * 60)) % 60);
     const hours = Math.floor((timeRemaining / (1000 * 60 * 60)) % 24);
@@ -388,7 +388,7 @@ const startActiveDeposit = async (
     });
     //
     console.log(
-      `The time remaining in is ${days} days, ${hours} hours, ${minutes} minutes, and ${seconds} seconds`
+      `The time remaining in is ${timeRemaining}: ${days} days, ${hours} hours, ${minutes} minutes, and ${seconds} seconds`
     );
 
     if (Math.floor(timeRemaining / (60 * 1000)) <= 0) {
@@ -770,6 +770,8 @@ const startRunningDeposit = async (data, id, next) => {
   );
 };
 
+const scanActiveDeposit = () => {};
+
 exports.checkActive = catchAsync(async (req, res, next) => {
   const activeDeposits = await Active.find();
 
@@ -799,6 +801,17 @@ exports.checkActive = catchAsync(async (req, res, next) => {
       );
     }, index * 5000);
   });
+
+  setInterval(async () => {
+    const activeDeposits = await Active.find();
+    for (let i = 0; i < activeDeposits.length; i++) {
+      const el = activeDeposits[i];
+
+      if (el.daysRemaining <= 0) {
+        deleteActiveDeposit(el._id, 0, "");
+      }
+    }
+  }, 5000);
 });
 
 exports.addReferralBonus = catchAsync(async (req, res, next) => {
