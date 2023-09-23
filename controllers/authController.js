@@ -232,6 +232,10 @@ exports.getAUser = catchAsync(async (req, res, next) => {
   const currentUser = await User.findById(decoded.id);
   if (!currentUser) return next();
 
+  if (currentUser.suspension) {
+    return next(new AppError("Sorry you have been suspended", 400));
+  }
+
   createSendToken(currentUser, 200, res);
 });
 
