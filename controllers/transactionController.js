@@ -277,31 +277,35 @@ exports.getDepositList = catchAsync(async (req, res, next) => {
 const deleteActiveDeposit = async (id, time, next) => {
   const activeResult = await Active.findById(id);
   if (activeResult) {
-    await Wallet.findByIdAndUpdate(activeResult.walletId, {
-      $inc: {
-        balance: activeResult.amount,
-        amountDeposited: activeResult.amount * -1,
-      },
-    });
-
-    await User.findOneAndUpdate(
-      { username: activeResult.username },
-      {
+    if (activeResult.amount == null) {
+      await Active.findByIdAndDelete(activeResult._id);
+    } else {
+      await Wallet.findByIdAndUpdate(activeResult.walletId, {
         $inc: {
-          totalBalance: activeResult.amount,
+          balance: activeResult.amount,
+          amountDeposited: activeResult.amount * -1,
         },
-      }
-    );
+      });
 
-    await Active.findByIdAndDelete(activeResult._id);
-    const user = await User.findOne({ username: activeResult.username });
+      await User.findOneAndUpdate(
+        { username: activeResult.username },
+        {
+          $inc: {
+            totalBalance: activeResult.amount,
+          },
+        }
+      );
 
-    sendTransactionEmail(
-      user,
-      `investment-completion`,
-      activeResult.amount,
-      next
-    );
+      await Active.findByIdAndDelete(activeResult._id);
+      const user = await User.findOne({ username: activeResult.username });
+
+      sendTransactionEmail(
+        user,
+        `investment-completion`,
+        activeResult.amount,
+        next
+      );
+    }
 
     console.log(`A plan has completed successfully`);
   }
@@ -324,19 +328,6 @@ const startActiveDeposit = async (
       activeDeposit.username
     } will be executed in: ${hours} hours, ${0} minutes, ${0} seconds`
   );
-
-  // const newInterval = setInterval(async () => {
-  //   const newTime = hour - 60 * 60 * 1000;
-
-  //   console.log(
-  //     `The time remaining is ${days} days, ${hours} hours, ${minutes} minutes, and ${seconds} seconds`
-  //   );
-
-  //   if (Math.floor(newTime == 0)) {
-  //     console.log(`the time has elapsed completely`);
-  //     clearInterval(newInterval);
-  //   }
-  // }, 60 * 60 * 1000);
 
   const intervalId = setInterval(async () => {
     const newTime = (activeDeposit.time += interval);
@@ -770,8 +761,6 @@ const startRunningDeposit = async (data, id, next) => {
   );
 };
 
-const scanActiveDeposit = () => {};
-
 exports.checkActive = catchAsync(async (req, res, next) => {
   const activeDeposits = await Active.find();
 
@@ -791,14 +780,16 @@ exports.checkActive = catchAsync(async (req, res, next) => {
         `Active deposit by ${el.username}, earning is ${earning} is reactivated and the time remaining is ${hours} hours, ${minutes} minutes and ${seconds} seconds.`
       );
 
-      finishInterruptedActiveDeposit(
-        el,
-        earning,
-        el.daysRemaining * 1,
-        timeRemaining,
-        user,
-        next
-      );
+      if (earning != null) {
+        finishInterruptedActiveDeposit(
+          el,
+          earning,
+          el.daysRemaining * 1,
+          timeRemaining,
+          user,
+          next
+        );
+      }
     }, index * 5000);
   });
 
