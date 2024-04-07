@@ -41,7 +41,7 @@ router
     transactionController.createTransaction,
     transactionController.getTransactions
   )
-  .get(authController.protect, transactionController.getTransactions);
+  .get(transactionController.getTransactions);
 
 router
   .route("/:id")
